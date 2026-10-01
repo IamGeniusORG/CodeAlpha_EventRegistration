@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Upcoming Events - EventMaster{% endblock %}
+
+{% block content %}
+<div class="mb-10 text-center max-w-2xl mx-auto">
+    <h1 class="text-4xl font-extrabold text-slate-900 tracking-tight">Discover Upcoming Events</h1>
+    <p class="mt-4 text-lg text-slate-600">Find and register for the best events happening around you. Don't miss out!</p>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    {% for event in events %}
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+        <div class="h-48 {% if not event.image %}bg-gradient-to-br from-indigo-500 to-purple-600{% endif %} relative bg-cover bg-center"
+             {% if event.image %}style="background-image: url('{{ event.image.url }}');"{% endif %}>
+            <div class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-indigo-700 shadow-sm z-10">
+                {{ event.date|date:"M d" }}
+            </div>
+            <div class="absolute inset-0 bg-black/20"></div>
+        </div>
+        <div class="p-6 flex-grow flex flex-col">
+            <div class="flex justify-between items-start mb-2">
+                <h2 class="text-xl font-bold text-slate-900 line-clamp-2">{{ event.title }}</h2>
+            </div>
+            <p class="text-slate-600 text-sm mb-6 line-clamp-3 leading-relaxed">{{ event.description }}</p>
+            
+            <div class="space-y-3 text-sm text-slate-600 mt-auto bg-slate-50 p-4 rounded-xl">
+                <div class="flex items-center">
+                    <div class="bg-indigo-100 p-1.5 rounded-md mr-3">
+                        <svg class="h-4 w-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    {{ event.date|date:"g:i A" }}
+                </div>
+                <div class="flex items-center">
+                    <div class="bg-indigo-100 p-1.5 rounded-md mr-3">
+                        <svg class="h-4 w-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    </div>
+                    <span class="truncate">{{ event.location }}</span>
+                </div>
+                <div class="flex items-center">
+                    <div class="bg-indigo-100 p-1.5 rounded-md mr-3">
+                        <svg class="h-4 w-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    </div>
+                    <span class="{% if event.is_full %}text-rose-600 font-semibold{% else %}text-emerald-600 font-semibold{% endif %}">
+                        {{ event.available_seats }} / {{ event.capacity }} seats left
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="p-6 pt-0">
+            <a href="{% url 'event_detail' event.pk %}" class="block w-full text-center bg-indigo-600 text-white hover:bg-indigo-700 px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors shadow-sm">
+                View Details
+            </a>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-span-full bg-white p-12 rounded-2xl shadow-sm border border-slate-200 text-center">
+        <svg class="mx-auto h-16 w-16 text-slate-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+        <h3 class="text-xl font-bold text-slate-900 mb-2">No Upcoming Events</h3>
+        <p class="text-slate-500">There are no events scheduled at the moment. Please check back later!</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
